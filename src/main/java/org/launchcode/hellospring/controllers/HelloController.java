@@ -19,7 +19,7 @@ public class HelloController {
 //    }
     //dynamic
     @RequestMapping(value = "hello", method = {RequestMethod.GET, RequestMethod.POST})
-    public String helloWithQueryParam(@RequestParam String name, Model model) {
+    public String hello(@RequestParam String name, Model model) {
         String thisGreeting = "Hello, " + name + "!";
         model.addAttribute("greeting", thisGreeting);
         return "hello";
@@ -33,47 +33,63 @@ public class HelloController {
 //        return "Hello, " + name + "!!";
 //    }
     //dynamic
-    @GetMapping("hello/{name}")
-    public String helloWithPathParam(@PathVariable String name, Model model) {
-        String greetingTwo = "Hello " + name + "!!";
-        model.addAttribute("greeting", greetingTwo);
-        return "hello";
+//    @GetMapping("hello/{name}")
+//    public String hello(@PathVariable String name, Model model) {
+//        String greetingTwo = "Hello " + name + "!!";
+//        model.addAttribute("greeting", greetingTwo);
+//        return "hello";
+//    }
+
+    @GetMapping()
+    @ResponseBody
+    public String helloForm() {
+        return "<html>" +
+                "<body>" +
+                "<form action='hello' method='post'>" + //submit a request to /hello
+                "<input type = 'text' name = 'name'>" +
+                "<input type='submit' value='Greet me!'>" +
+                "</form>" +
+                "</body>" +
+                "</html>";
     }
 
-//    @GetMapping("form")
-//    @ResponseBody
-//    public String helloForm() {
-//        return "<html>" +
-//                "<body>" +
-//                "<form action='hello' method='post'>" + //submit a request to /hello
-//                "<input type = 'text' name = 'name'>" +
-//                "<input type='submit' value='Greet me!'>" +
-//                "</form>" +
-//                "</body>" +
-//                "</html>";
-//    }
-
     //Ch 10 exercises
-//    @GetMapping("form")
-//    public String createMessage() {
-//        return "<html>" +
-//                "<body>" +
-//                "<form action='hello' method='post'>" + //submit a request to /hello
-//                "<input type = 'text' name = 'name'>" +
-////                "<input type='" +
-//                "<select name='language'>" +
-//                    "<option value='English'>English</option>" +
-//                    "<option value='Deutsch'>Deutsch</option>" +
-//                "</select>" +
-//                "<input type='submit' value='Greet me!'>" +
-//                "</form>" +
-//                "</body>" +
-//                "</html>";
-//    }
-
     @GetMapping("form")
-    public String helloForm() {
-        return "form";
+    @ResponseBody
+    public String getLanguage() {
+        return "<html>" +
+                "<body>" +
+                "<form action='createMessage' method='post'>" + //submit a request to /createMessage
+                "<input type = 'text' name = 'name'>" +
+                "<select name='language'>" +
+                    "<option value='eng'>English</option>" +
+                    "<option value='deu'>Deutsch</option>" +
+                    "<option value='pig'>Pig Latin</option>" +
+                "</select>" +
+                "<input type='submit' value='Greet me!'>" +
+                "</form>" +
+                "</body>" +
+                "</html>";
+    }
+
+    @RequestMapping(value = "createMessage", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public String createMessage(@RequestParam String name, @RequestParam String language, Model model) {
+        String langGreet = "";
+        if (language.equals("eng")) {
+            langGreet = "Hello, ";
+        } else if (language.equals("deu")) {
+            langGreet = "Guten Tag, ";
+        } else if (language.equals("pig")) {
+            langGreet = "Ello hay, ";
+        }
+        String languageGreeting = "";
+        model.addAttribute("langGreeting", languageGreeting);
+        return "<html>" +
+                "<body>" +
+                "<h1>" + langGreet + name + "</h1>" +
+                "</body>" +
+                "</html>";
     }
 
     @GetMapping("hello-names")
